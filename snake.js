@@ -156,13 +156,19 @@ function update() {
   
   if (cubeIndex !== -1) {
     const cube = letterCubes[cubeIndex];
-  
+    
+    // IMMEDIATELY remove eaten cube
+    letterCubes.splice(cubeIndex, 1);
+    
     if (cube.isCorrect) {
       // CORRECT: add to snake and advance
       eatenLetters.push(cube.letter.toUpperCase());
       currentLetterIndex++;
       score++;
       scoreSpan.textContent = score;
+  
+      // Generate NEW set of 5 cubes for next letter
+      generateLetterCubesForAnswer();
   
       // Check if finished this answer
       if (currentLetterIndex >= currentAnswerLetters.length) {
@@ -182,13 +188,7 @@ function update() {
           } else {
             resetGameForNewQuestion();
           }
-        } else {
-          // Next letter in same question
-          generateLetterCubesForAnswer();
         }
-      } else {
-        // Next letter in same question
-        generateLetterCubesForAnswer();
       }
     } else {
       // WRONG distractor
@@ -199,6 +199,8 @@ function update() {
     snake.pop();
   }
 
+  ctx.textAlign = "left";      // Reset text alignment
+  ctx.textBaseline = "alphabetic"; // Reset text baseline
 }
 
 
@@ -335,4 +337,5 @@ loadQuizData().then(() => {
 
 
 gameLoop();
+
 
