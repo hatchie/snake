@@ -17,6 +17,7 @@ let currentAnswer = "";        // current answer word/sentence
 let currentAnswerLetters = []; // array of letters (in order)
 let currentLetterIndex = 0;    // index of next letter to eat
 
+let eatenLetters = []; // tracks letters snake has eaten
 
 let snake = [{ x: 10, y: 10 }];
 let vx = 1;
@@ -107,7 +108,8 @@ function resetGameForNewQuestion() {
   gameOver = false;
   quizFinished = false;
   speed = 8;
-
+  eatenLetters = []; // CLEAR eaten letters
+  
   prepareCurrentQuestion();
 }
 
@@ -151,22 +153,19 @@ function update() {
   const cubeIndex = letterCubes.findIndex(
     c => c.x === head.x && c.y === head.y
   );
-
+  
   if (cubeIndex !== -1) {
     const cube = letterCubes[cubeIndex];
-
-    if (cube.indexInAnswer === currentLetterIndex) {
-      // Correct next letter
+  
+    if (cube.isCorrect) {
+      // CORRECT: add to snake and advance
+      eatenLetters.push(cube.letter.toUpperCase());
       currentLetterIndex++;
       score++;
       scoreSpan.textContent = score;
-
-      // Remove that cube and regenerate cubes only for remaining letters
-      generateLetterCubesForAnswer();
-
+  
       // Check if finished this answer
       if (currentLetterIndex >= currentAnswerLetters.length) {
-        // skip trailing spaces
         let allDone = true;
         for (let i = currentLetterIndex; i < currentAnswerLetters.length; i++) {
           if (currentAnswerLetters[i] !== " ") {
@@ -174,7 +173,7 @@ function update() {
             break;
           }
         }
-
+  
         if (allDone) {
           currentQuestionIndex++;
           if (currentQuestionIndex >= questions.length) {
@@ -183,18 +182,23 @@ function update() {
           } else {
             resetGameForNewQuestion();
           }
+        } else {
+          // Next letter in same question
+          generateLetterCubesForAnswer();
         }
+      } else {
+        // Next letter in same question
+        generateLetterCubesForAnswer();
       }
-
-      // Snake grows on correct letter (no pop)
     } else {
-      // Wrong letter order
+      // WRONG distractor
       gameOver = true;
     }
   } else {
-    // Normal move, no letter eaten
+    // Normal move, no cube eaten
     snake.pop();
   }
+
 }
 
 
@@ -202,28 +206,43 @@ function draw() {
   ctx.fillStyle = "#020617";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-  // snake
-  ctx.fillStyle = "#22c55e";
-  for (const segment of snake) {
+   // snake: each segment shows its letter
+  for (let i = 0; i < snake.length; i++) {
+    const segment = snake[i];
+    ctx.fillStyle = i === 0 ? "#22c55e" : "#38bdf8"; // head green, body blue
+    
     ctx.fillRect(
       segment.x * tileSize,
       segment.y * tileSize,
       tileSize - 2,
       tileSize - 2
     );
+  
+    // Show letter on snake segments (last eaten letters)
+    if (i > 0 && eatenLetters[i-1]) {
+      ctx.fillStyle = "#0b1120";
+      ctx.font = "12px system-ui";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(
+        eatenLetters[i-1],
+        segment.x * tileSize + tileSize / 2,
+        segment.y * tileSize + tileSize / 2
+      );
+    }
   }
 
-  // cubes: next letter = highlighted color, others another color
+
+  // cubes: ALL BLUE now
   for (const cube of letterCubes) {
-    const isNext = cube.indexInAnswer === currentLetterIndex;
-    ctx.fillStyle = isNext ? "#f97316" : "#38bdf8";
+    ctx.fillStyle = "#38bdf8";  // ALL BLUE
     ctx.fillRect(
       cube.x * tileSize,
       cube.y * tileSize,
       tileSize - 2,
       tileSize - 2
     );
-
+  
     ctx.fillStyle = "#0b1120";
     ctx.font = "14px system-ui";
     ctx.textAlign = "center";
@@ -234,6 +253,7 @@ function draw() {
       cube.y * tileSize + tileSize / 2
     );
   }
+
 }
 
 function drawGameOver() {
@@ -248,13 +268,39 @@ function drawGameOver() {
 function generateLetterCubesForAnswer() {
   letterCubes = [];
 
-  // place cubes for remaining letters from currentLetterIndex to end
-  for (let i = currentLetterIndex; i < currentAnswerLetters.length; i++) {
-    const letter = currentAnswerLetters[i];
+  // Get the NEXT correct letter the player needs
+  const correctLetter = currentAnswerLetters[currentLetterIndex];
+  if (!correctLetter || correctLetter === " ") {
+    // Skip spaces automatically
+    currentLetterIndex++;
+    generateLetterCubesForAnswer(); // recursive call
+    return;
+  }
 
-    // You might want to ignore spaces (so they are “auto-correct”)
-    if (letter === " ") continue;
+  // Define distractors based on correct letter (your rules)
+  let distractors = [];
+  if (correctLetter.toLowerCase() === "s") {
+    distractors = ["c", "z", "x", "p"];
+  } else if (correctLetter.toLowerCase() === "a") {
+    distractors = ["i", "o", "e", "u"];
+  } else if (correctLetter.toLowerCase() === "e") {
+    distractors = ["i", "a", "o", "u"];
+  } else if (correctLetter.toLowerCase() === "i") {
+    distractors = ["e", "a", "o", "u"];
+  } else if (correctLetter.toLowerCase() === "o") {
+    distractors = ["a", "e", "i", "u"];
+  } else if (correctLetter.toLowerCase() === "u") {
+    distractors = ["a", "e", "i", "o"];
+  } else {
+    // Default: nearby letters on keyboard
+    distractors = ["q", "w", "d", "f"];
+  }
 
+  // Create 5 cubes: 1 correct + 4 distractors
+  const allLetters = [correctLetter.toLowerCase(), ...distractors];
+  
+  // Shuffle positions but keep letters in fixed order (1 correct first)
+  for (let i = 0; i < 5; i++) {
     let pos;
     let conflict;
     do {
@@ -262,18 +308,21 @@ function generateLetterCubesForAnswer() {
         x: Math.floor(Math.random() * tileCount),
         y: Math.floor(Math.random() * tileCount)
       };
-
       conflict = snake.some(seg => seg.x === pos.x && seg.y === pos.y);
       if (!conflict) {
         conflict = letterCubes.some(c => c.x === pos.x && c.y === pos.y);
       }
     } while (conflict);
 
+    const letter = allLetters[i];
+    const isCorrect = i === 0; // First is always correct
+
     letterCubes.push({
       x: pos.x,
       y: pos.y,
-      letter,
-      indexInAnswer: i
+      letter: letter,
+      indexInAnswer: currentLetterIndex, // All point to current needed index
+      isCorrect: isCorrect
     });
   }
 }
@@ -286,3 +335,4 @@ loadQuizData().then(() => {
 
 
 gameLoop();
+
