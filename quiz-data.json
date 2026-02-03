@@ -1,0 +1,28 @@
+{
+  "English": {
+    "Lesson1": [
+      {
+        "question": "Translate to English: \"Haus\"",
+        "answer": "house"
+      },
+      {
+        "question": "Write the color of the sky on a clear day.",
+        "answer": "blue"
+      }
+    ],
+    "Lesson2": [
+      {
+        "question": "Complete: \"How are ____?\"",
+        "answer": "you"
+      }
+    ]
+  },
+  "German": {
+    "Lesson1": [
+      {
+        "question": "Translate to German: \"apple\"",
+        "answer": "Apfel"
+      }
+    ]
+  }
+}

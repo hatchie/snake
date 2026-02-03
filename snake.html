@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Snake – My Game Hub</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .snake-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    #gameCanvas {
+      background: #020617;
+      border: 2px solid #4b5563;
+    }
+
+    .score {
+      font-size: 1rem;
+    }
+
+    .snake-controls {
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="logo">My Game Hub</div>
+    <nav class="main-nav">
+      <a href="index.html">Home</a>
+    </nav>
+  </header>
+
+  <main class="page-content">
+  <h1>Snake Quiz</h1>
+
+  <div class="quiz-controls">
+    <label>
+      Category:
+      <select id="categorySelect">
+        <option value="">-- choose --</option>
+        <option value="English">English</option>
+        <option value="German">German</option>
+      </select>
+    </label>
+
+    <label>
+      Lesson:
+      <select id="lessonSelect">
+        <option value="">-- choose --</option>
+        <option value="Lesson1">Lesson 1</option>
+        <option value="Lesson2">Lesson 2</option>
+      </select>
+    </label>
+
+    <button id="startQuizBtn">Start quiz</button>
+  </div>
+
+  <p id="questionText">Choose a category and lesson, then press Start.</p>
+
+  <div class="snake-wrapper">
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <div class="score">Score: <span id="scoreValue">0</span></div>
+    <div class="snake-controls">
+      Controls: Arrow keys or WASD. Press R to restart the same quiz.
+    </div>
+  </div>
+</main>
+
+
+  <footer class="site-footer">
+    <p>© 2026 My Game Hub</p>
+  </footer>
+
+  <script src="snake.js"></script>
+</body>
+</html>
