@@ -124,6 +124,41 @@ function resetGameForNewQuestion() {
   prepareCurrentQuestion();
 }
 
+// 👇 MOBILE TOUCH CONTROLS
+function moveSnake(direction) {
+  if (gameOver || quizFinished) return;
+  
+  switch(direction) {
+    case 'up':
+      if (vy === 1) return;
+      vx = 0; vy = -1;
+      break;
+    case 'down':
+      if (vy === -1) return;
+      vx = 0; vy = 1;
+      break;
+    case 'left':
+      if (vx === 1) return;
+      vx = -1; vy = 0;
+      break;
+    case 'right':
+      if (vx === -1) return;
+      vx = 1; vy = 0;
+      break;
+  }
+}
+
+function preventDefault(e) {
+  e.preventDefault();
+  return false;
+}
+
+// 👈 Prevent mobile zoom/scroll
+document.addEventListener('touchstart', function(e) {}, { passive: false });
+document.addEventListener('touchend', function(e) {}, { passive: false });
+document.addEventListener('touchmove', function(e) { e.preventDefault(); }, { passive: false });
+
+
 function gameLoop() {
   if (gameOver) {
     drawGameOver();
@@ -357,4 +392,5 @@ loadQuizData().then(() => {
   console.error("❌ Failed to load quiz-data.json:", error);
   questionTextEl.textContent = "Error loading questions. Check quiz-data.json";
 });
+
 
