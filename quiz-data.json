@@ -1,28 +1,43 @@
 {
-  "English": {
-    "Lesson1": [
-      {
-        "question": "Translate to English: \"Haus\"",
-        "answer": "house"
-      },
-      {
-        "question": "Write the color of the sky on a clear day.",
-        "answer": "blue"
-      }
-    ],
-    "Lesson2": [
-      {
-        "question": "Complete: \"How are ____?\"",
-        "answer": "you"
-      }
-    ]
-  },
   "German": {
     "Lesson1": [
-      {
-        "question": "Translate to German: \"apple\"",
-        "answer": "Apfel"
-      }
+      { "question": "het broodje", "answer": "das Brötchen" },
+      { "question": "de kaas", "answer": "der Käse" },
+      { "question": "de ham", "answer": "der Schinken" },
+      { "question": "de tonijn", "answer": "der Thunfisch" },
+      { "question": "de ui", "answer": "die Zwiebel" },
+      { "question": "de tafel", "answer": "der Tisch" },
+      { "question": "krijgen", "answer": "bekommen" },
+      { "question": "het drankje", "answer": "das Getränk" }
+    ],
+    "Lesson2": [
+      { "question": "de rekening", "answer": "die Rechnung" },
+      { "question": "de vorken", "answer": "die Gabeln" },
+      { "question": "de suiker", "answer": "der Zucker" },
+      { "question": "de borden", "answer": "die Teller" },
+      { "question": "het toetje", "answer": "der Nachtisch" },
+      { "question": "de lepel", "answer": "der Löffel" },
+      { "question": "genomen", "answer": "genommen" },
+      { "question": "heet", "answer": "heiß" },
+      { "question": "Eet smakelijk", "answer": "Guten Appetit" }
+    ],
+    "Lesson3": [
+      { "question": "het vlees", "answer": "das Fleisch" },
+      { "question": "de schnitzels", "answer": "die Schnitzel" },
+      { "question": "het restaurant", "answer": "das Restaurant" },
+      { "question": "de glazen", "answer": "die Gläser" },
+      { "question": "de soepen", "answer": "die Suppen" },
+      { "question": "de kopjes", "answer": "die Tassen" },
+      { "question": "de restaurants", "answer": "die Restaurants" },
+      { "question": "de lepels", "answer": "die Löffel" },
+      { "question": "de patat, friet", "answer": "die Pommes" },
+      { "question": "het ingrediënt", "answer": "die Zutat" }
+    ]  
+  },
+  "French": {
+    "Lesson1": [
+      { "question": "Translate to German: \"apple\"", "answer": "Apfel" }
     ]
   }
 }
+
