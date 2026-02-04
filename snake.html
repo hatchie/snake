@@ -38,8 +38,15 @@
   </header>
 
   <main class="page-content">
-  <h1>Snake Quiz</h1>
+  <div class="game-header">
+    <h1>🐍 Snake Quiz</h1>
+    <div class="stats">
+      <span>Lives: <span id="livesValue">3</span></span>
+      <span>Score: <span id="scoreValue">0</span></span>
+    </div>
+  </div>
 
+  <!-- Controls (top on mobile) -->
   <div class="quiz-controls">
     <label class="control-label">
       Category:
@@ -49,7 +56,6 @@
         <option value="German">German</option>
       </select>
     </label>
-
     <label class="control-label">
       Lesson:
       <select id="lessonSelect">
@@ -58,42 +64,39 @@
         <option value="Lesson2">Lesson 2</option>
       </select>
     </label>
-
     <label class="control-label">
       Speed:
       <select id="speedSelect">
         <option value="6">🐌 Slow</option>
         <option value="8" selected>🐢 Normal</option>
         <option value="12">🐇 Fast</option>
+        <option value="16">⚡ Crazy</option>
       </select>
     </label>
-      
-    <button id="startQuizBtn">Start quiz</button>
+    <button id="startQuizBtn" class="start-btn">🚀 Start Quiz</button>
   </div>
 
-  <p id="questionText">Choose a category and lesson, then press Start.</p>
+  <p id="questionText">Choose category/lesson, then press Start</p>
 
-  <!-- 👇 MOBILE TOUCH CONTROLS -->
-    <div class="mobile-controls">
-      <div class="dpad">
-        <button class="control-btn up" ontouchstart="moveSnake('up')" ontouchend="preventDefault(event)">↑</button>
-        <div class="dpad-center">
-          <button class="control-btn left" ontouchstart="moveSnake('left')" ontouchend="preventDefault(event)">←</button>
-          <button class="control-btn right" ontouchstart="moveSnake('right')" ontouchend="preventDefault(event)">→</button>
-          <button class="control-btn down" ontouchstart="moveSnake('down')" ontouchend="preventDefault(event)">↓</button>
-        </div>
-      </div>
-      <button class="restart-btn" onclick="resetGame()" ontouchstart="resetGame()">🔄 Restart</button>
-    </div>
-    
-  <div class="snake-wrapper">
+  <!-- Game Canvas (flexible height) -->
+  <div class="game-area">
     <canvas id="gameCanvas" width="400" height="400"></canvas>
-    <div class="score">Score: <span id="scoreValue">0</span></div>
-    <div class="snake-controls">
-      Controls: Arrow keys or WASD. Press R to restart the same quiz.
+  </div>
+
+  <!-- Touch Controls (bottom) -->
+  <div class="mobile-controls">
+    <div class="dpad">
+      <button class="control-btn up" ontouchstart="moveSnake('up')">↑</button>
+      <div class="dpad-center">
+        <button class="control-btn left" ontouchstart="moveSnake('left')">←</button>
+        <button class="control-btn right" ontouchstart="moveSnake('right')">→</button>
+        <button class="control-btn down" ontouchstart="moveSnake('down')">↓</button>
+      </div>
     </div>
+    <button class="restart-btn" onclick="resetGame()">🔄 Restart</button>
   </div>
 </main>
+
 
 
   <footer class="site-footer">
@@ -103,6 +106,7 @@
   <script src="snake.js"></script>
 </body>
 </html>
+
 
 
 
