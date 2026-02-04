@@ -455,8 +455,8 @@ function generateLetterCubesForAnswer() {
     let conflict;
     do {
       pos = {
-        x: Math.floor(Math.random() * (tileCount - 2)) + 1,  // 2 tiles from left/right
-        y: Math.floor(Math.random() * (tileCount * 0.8)) + 5  // 25% top = ~6 tiles down + 60% play area
+        x: Math.floor(Math.random() * (tileCount - 4)) + 2,  // 2 tiles from left/right
+        y: Math.floor(Math.random() * (tileCount * 0.7)) + 5  // 25% top = ~6 tiles down + 60% play area
       };
       conflict = snake.some(seg => seg.x === pos.x && seg.y === pos.y);
       if (!conflict) {
@@ -486,6 +486,7 @@ loadQuizData().then(() => {
   console.error("❌ Failed to load quiz-data.json:", error);
   questionTextEl.textContent = "Error loading questions. Check quiz-data.json";
 });
+
 
 
 
