@@ -119,7 +119,6 @@ function resetGameForNewQuestion() {
   vy = 0;
   gameOver = false;
   quizFinished = false;
-  speed = 8;
   eatenLetters = []; // CLEAR eaten letters
   
   prepareCurrentQuestion();
@@ -358,3 +357,4 @@ loadQuizData().then(() => {
   console.error("❌ Failed to load quiz-data.json:", error);
   questionTextEl.textContent = "Error loading questions. Check quiz-data.json";
 });
+
