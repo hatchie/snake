@@ -20,6 +20,7 @@ let currentLetterIndex = 0;    // index of next letter to eat
 
 let eatenLetters = []; // tracks letters snake has eaten
 
+let lives = 3;  //  3 snake lives
 let snake = [{ x: 10, y: 10 }];
 let vx = 1;
 let vy = 0;
@@ -119,12 +120,14 @@ function resetGameForNewQuestion() {
   vy = 0;
   gameOver = false;
   quizFinished = false;
-  eatenLetters = []; // CLEAR eaten letters
-  
+  eatenLetters = [];
+  lives = 3;  // RESET LIVES
+  document.getElementById("livesValue").textContent = lives;
   prepareCurrentQuestion();
 }
 
-// 👇 MOBILE TOUCH CONTROLS
+
+// MOBILE TOUCH CONTROLS
 function moveSnake(direction) {
   if (gameOver || quizFinished) return;
   
@@ -160,7 +163,9 @@ document.addEventListener('touchmove', function(e) { e.preventDefault(); }, { pa
 
 
 function gameLoop() {
-  if (gameOver) {
+  if (quizFinished) {
+    drawQuizComplete();
+  } else if (gameOver) {
     drawGameOver();
   } else {
     update();
@@ -168,6 +173,7 @@ function gameLoop() {
   }
   setTimeout(gameLoop, 1000 / speed);
 }
+
 
 function update() {
   if (quizFinished) return;
@@ -244,7 +250,14 @@ function update() {
       }
     } else {
       // WRONG distractor
-      gameOver = true;
+      lives--;
+      document.getElementById("livesValue").textContent = lives;
+      if (lives <= 0) {
+        gameOver = true;
+      } else {
+        // Respawn snake shorter
+        snake = snake.slice(0, Math.max(1, eatenLetters.length));
+      }
     }
   } else {
     // Normal move, no cube eaten
@@ -392,5 +405,6 @@ loadQuizData().then(() => {
   console.error("❌ Failed to load quiz-data.json:", error);
   questionTextEl.textContent = "Error loading questions. Check quiz-data.json";
 });
+
 
 
