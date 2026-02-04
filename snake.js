@@ -156,10 +156,10 @@ function preventDefault(e) {
   return false;
 }
 
-// 👈 Prevent mobile zoom/scroll
-document.addEventListener('touchstart', function(e) {}, { passive: false });
-document.addEventListener('touchend', function(e) {}, { passive: false });
-document.addEventListener('touchmove', function(e) { e.preventDefault(); }, { passive: false });
+// ✅ FIXED MOBILE CONTROLS - Only on D-pad buttons
+canvas.addEventListener('touchstart', (e) => {
+  e.preventDefault();  // Only prevent on canvas
+}, { passive: false });
 
 
 function drawQuizComplete() {
@@ -483,6 +483,7 @@ loadQuizData().then(() => {
   console.error("❌ Failed to load quiz-data.json:", error);
   questionTextEl.textContent = "Error loading questions. Check quiz-data.json";
 });
+
 
 
 
