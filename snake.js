@@ -415,21 +415,18 @@ function drawGameOver() {
 function generateLetterCubesForAnswer() {
   letterCubes = [];
 
-  // Skip spaces to find next REAL letter needed
   let nextLetterIndex = currentLetterIndex;
   while (nextLetterIndex < currentAnswerLetters.length && 
          currentAnswerLetters[nextLetterIndex] === " ") {
     nextLetterIndex++;
   }
 
-  // If no more letters needed, exit
   if (nextLetterIndex >= currentAnswerLetters.length) {
     return;
   }
 
   const correctLetter = currentAnswerLetters[nextLetterIndex];
 
- // Smart distractors (your rules)
   let distractors = [];
   switch (correctLetter.toLowerCase()) {
     case "s": distractors = ["c", "z", "x", "p"]; break;
@@ -441,31 +438,31 @@ function generateLetterCubesForAnswer() {
     default: distractors = ["q", "w", "d", "f"]; break;
   }
 
-   // 👇 GUARANTEE EXACTLY 5 CUBES
   const allLetters = [correctLetter.toLowerCase(), ...distractors.slice(0, 4)];
   
-  for (let i = 0; i < 5; i++) {  // 👈 ALWAYS 5 iterations
+  for (let i = 0; i < 5; i++) {
     let pos;
     let attempts = 0;
-    const maxAttempts = 100;  // Prevent infinite loop
+    const maxAttempts = 100;
+    
+    // 👇 FIXED: Declare conflict BEFORE do-while
+    let conflict;
     
     do {
-      // Safe spawn area (25% from top, 1 tile from edges)
       pos = {
         x: Math.floor(Math.random() * (tileCount - 4)) + 2,
         y: Math.floor(Math.random() * (tileCount * 0.6)) + 6
       };
       
       attempts++;
-      let conflict = snake.some(seg => seg.x === pos.x && seg.y === pos.y);
+      conflict = snake.some(seg => seg.x === pos.x && seg.y === pos.y);
       if (!conflict) {
         conflict = letterCubes.some(c => c.x === pos.x && c.y === pos.y);
       }
     } while (conflict && attempts < maxAttempts);
 
-    // 👈 EMERGENCY: if no space found, use first safe position
     if (attempts >= maxAttempts) {
-      pos = { x: 5, y: 8 };  // Hard-coded safe spot
+      pos = { x: 5, y: 8 };
     }
 
     letterCubes.push({
@@ -476,8 +473,6 @@ function generateLetterCubesForAnswer() {
       isCorrect: i === 0
     });
   }
-  
-  console.log(`Generated ${letterCubes.length} cubes`);  // Debug
 }
 
 // Wait for JSON before starting game
@@ -488,6 +483,7 @@ loadQuizData().then(() => {
   console.error("❌ Failed to load quiz-data.json:", error);
   questionTextEl.textContent = "Error loading questions. Check quiz-data.json";
 });
+
 
 
 
