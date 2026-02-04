@@ -267,9 +267,6 @@ function update() {
       document.getElementById("livesValue").textContent = lives;
       if (lives <= 0) {
         gameOver = true;
-      } else {
-        // Respawn snake shorter
-        snake = snake.slice(0, Math.max(1, eatenLetters.length));
       }
     }
   } else {
@@ -489,6 +486,7 @@ loadQuizData().then(() => {
   console.error("❌ Failed to load quiz-data.json:", error);
   questionTextEl.textContent = "Error loading questions. Check quiz-data.json";
 });
+
 
 
 
