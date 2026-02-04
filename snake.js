@@ -1,6 +1,7 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const scoreSpan = document.getElementById("scoreValue");
+const speedSelect = document.getElementById("speedSelect");
 
 const tileSize = 20;
 const tileCount = canvas.width / tileSize;
@@ -37,6 +38,9 @@ startQuizBtn.addEventListener("click", () => {
   selectedCategory = categorySelect.value;
   selectedSubcategory = lessonSelect.value;
 
+  // Get selected speed
+  speed = parseInt(speedSelect.value);
+  
   if (!selectedCategory || !selectedSubcategory) {
     alert("Please choose both category and lesson.");
     return;
@@ -347,6 +351,7 @@ loadQuizData().then(() => {
 
 
 gameLoop();
+
 
 
 
