@@ -60,7 +60,7 @@ startQuizBtn.addEventListener("click", () => {
 });
 
 
-document.addEventListener("keydown", );
+document.addEventListener("keydown", handleKeydown);
 
 function resetGame() {
   resetGameForNewQuestion();
@@ -270,7 +270,9 @@ function draw() {
       cube.y * tileSize + tileSize / 2
     );
   }
-
+  
+  ctx.textAlign = "left";
+  ctx.textBaseline = "alphabetic";
 }
 
 function drawGameOver() {
@@ -348,17 +350,11 @@ function generateLetterCubesForAnswer() {
 }
 
 
+// Wait for JSON before starting game
 loadQuizData().then(() => {
-  // Optionally, auto-select a default category/lesson
-  // or show a message like "Choose category to start".
+  console.log("✅ Quiz data loaded successfully:", quizData);
+  gameLoop();
+}).catch(error => {
+  console.error("❌ Failed to load quiz-data.json:", error);
+  questionTextEl.textContent = "Error loading questions. Check quiz-data.json";
 });
-
-
-gameLoop();
-
-
-
-
-
-
-
