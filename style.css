@@ -46,6 +46,10 @@ a {
   padding: 24px;
   max-width: 1200px;
   margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .hero {
@@ -66,13 +70,16 @@ a {
 }
 
 .btn-primary,
-.btn-secondary {
+.btn-secondary,
+.start-btn {
   display: inline-block;
-  padding: 10px 18px;
-  border-radius: 999px;
-  font-size: 0.95rem;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 1rem;
   border: none;
   cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
 }
 
 .btn-primary {
@@ -87,10 +94,25 @@ a {
 .btn-secondary {
   background: #111827;
   border: 1px solid #374151;
+  color: #f5f5f5;
 }
 
 .btn-secondary:hover {
   background: #1f2937;
+}
+
+.start-btn {
+  background: #6366f1;
+  border: 2px solid #4f46e5;
+  color: #fff;
+  text-align: center;
+  min-height: 56px;
+}
+
+.start-btn:hover,
+.start-btn:active {
+  background: #4f46e5;
+  transform: translateY(-1px);
 }
 
 .games-section {
@@ -113,6 +135,11 @@ a {
   border-radius: 12px;
   padding: 16px;
   border: 1px solid #1f2937;
+  transition: transform 0.2s;
+}
+
+.game-card:hover {
+  transform: translateY(-4px);
 }
 
 .game-card h3 {
@@ -131,52 +158,106 @@ a {
   font-size: 0.8rem;
   opacity: 0.7;
   border-top: 1px solid #1b2440;
-  margin-top: 32px;
+  margin-top: auto;
 }
 
-/* Mobile Quiz Styles */
+/* Game Header (Lives + Score) */
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: #0b1120;
+  border-radius: 16px;
+  border: 2px solid #1f2937;
+  margin-bottom: 16px;
+}
+
+.game-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.stats {
+  display: flex;
+  gap: 24px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* Quiz Controls */
 .quiz-controls {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin: 20px 0;
-  padding: 20px;
+  padding: 24px;
   background: #0b1120;
-  border-radius: 16px;
-  border: 1px solid #1f2937;
+  border-radius: 20px;
+  border: 2px solid #1f2937;
+  backdrop-filter: blur(10px);
 }
 
 .control-label {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  font-size: 16px; /* Minimum touch target size */
+  font-size: 18px;
+  font-weight: 500;
 }
 
-.control-label select,
-.start-btn {
-  padding: 16px 20px;  /* Large touch targets */
-  font-size: 16px;
+.control-label select {
+  padding: 18px 20px;
+  font-size: 18px;
   border: 2px solid #374151;
-  border-radius: 12px;
+  border-radius: 16px;
   background: #111827;
   color: #f5f5f5;
   cursor: pointer;
-  min-height: 52px; /* Touch-friendly height */
+  min-height: 60px;
+  transition: border-color 0.2s;
 }
 
-.start-btn {
-  background: #6366f1;
-  border-color: #4f46e5;
-  font-weight: 600;
+.control-label select:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+/* Game Area */
+.game-area {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 40vh;
+  max-height: 60vh;
+  padding: 20px 0;
+}
+
+#gameCanvas {
+  background: #020617;
+  border: 4px solid #4b5563;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  max-width: 90vw;
+  max-height: 90vh;
+  width: 450px;
+  height: 450px;
+  touch-action: none;
+  display: block;
+}
+
+/* Question Text */
+#questionText {
   text-align: center;
+  font-size: 1.2rem;
+  padding: 20px;
+  background: rgba(17, 24, 39, 0.6);
+  border-radius: 12px;
+  border-left: 4px solid #6366f1;
 }
 
-.start-btn:hover {
-  background: #4f46e5;
-}
-
-/* Larger canvas on mobile */
+/* Snake Wrapper (legacy) */
 .snake-wrapper {
   display: flex;
   flex-direction: column;
@@ -186,56 +267,90 @@ a {
   padding: 20px;
 }
 
-#gameCanvas {
-  background: #020617;
-  border: 3px solid #4b5563;
-  border-radius: 12px;
-  max-width: 90vw;
-  max-height: 50vh;
-  width: 400px;
-  height: 400px;
-  touch-action: none; /* Better mobile controls */
-}
-
 .score,
 .snake-controls {
-  font-size: 18px;
+  font-size: 20px;
   text-align: center;
-  padding: 12px;
+  padding: 16px;
+  background: #0b1120;
+  border-radius: 12px;
+  border: 1px solid #1f2937;
 }
 
-/* Mobile-first responsive layout */
+/* Mobile-First Responsive */
 @media (max-width: 768px) {
   .page-content {
-    padding: 16px;
+    padding: 12px;
+    gap: 16px;
+  }
+  
+  .site-header {
+    padding: 12px 16px;
+  }
+  
+  .game-header {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+  
+  .game-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .stats {
+    font-size: 18px;
+    gap: 20px;
   }
   
   .quiz-controls {
     padding: 20px;
-    margin: 16px;
+    gap: 16px;
+  }
+  
+  .control-label {
+    font-size: 16px;
+  }
+  
+  .control-label select {
+    font-size: 16px;
+    padding: 16px;
+    min-height: 56px;
+  }
+  
+  .game-area {
+    min-height: 35vh;
+    padding: 12px 0;
   }
   
   #gameCanvas {
-    width: 90vw;
-    height: 90vw;
-    max-width: 500px;
-    max-height: 500px;
+    width: 85vw;
+    height: 85vw;
+    max-width: 400px;
+    max-height: 400px;
   }
   
-  .snake-controls {
-    font-size: 16px;
+  #questionText {
+    font-size: 1.1rem;
+    padding: 16px;
   }
 }
 
-/* Landscape mobile fix */
-@media (max-height: 500px) and (orientation: landscape) {
+/* Landscape Mobile */
+@media (max-height: 600px) and (orientation: landscape) {
   .quiz-controls {
     flex-direction: row;
     flex-wrap: wrap;
+    gap: 12px;
   }
   
   .control-label {
     flex: 1 1 45%;
+    min-width: 140px;
+  }
+  
+  .game-area {
+    min-height: 45vh;
   }
 }
 
@@ -244,18 +359,17 @@ a {
   display: none;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  margin-top: 20px;
+  gap: 20px;
   padding: 20px;
 }
 
 @media (max-width: 768px) {
   .mobile-controls {
-    display: flex;  /* 👈 SHOW on mobile only */
+    display: flex;
   }
   
   .snake-controls {
-    display: none;  /* 👈 HIDE keyboard text on mobile */
+    display: none;
   }
 }
 
@@ -263,60 +377,71 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  background: rgba(17, 24, 39, 0.9);
-  padding: 20px;
-  border-radius: 24px;
+  gap: 8px;
+  background: rgba(17, 24, 39, 0.95);
+  padding: 28px;
+  border-radius: 28px;
   border: 3px solid #4b5563;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
 }
 
 .dpad-center {
   display: flex;
   flex-direction: row;
-  gap: 4px;
+  gap: 12px;
 }
 
 .control-btn {
-  width: 70px;
-  height: 70px;
+  width: 80px;
+  height: 80px;
   border: none;
-  border-radius: 16px;
-  font-size: 24px;
+  border-radius: 24px;
+  font-size: 28px;
   font-weight: bold;
   color: #f5f5f5;
-  background: linear-gradient(145deg, #38bdf8, #0ea5e9);
-  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+  background: linear-gradient(145deg, #3b82f6, #1d4ed8);
+  box-shadow: 0 12px 30px rgba(59, 130, 246, 0.4);
   cursor: pointer;
   user-select: none;
   touch-action: manipulation;
-  transition: all 0.1s;
+  transition: all 0.15s ease;
 }
 
 .control-btn:active {
-  transform: scale(0.95);
-  background: linear-gradient(145deg, #0ea5e9, #0284c7);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.6);
+  transform: scale(0.92);
+  background: linear-gradient(145deg, #1d4ed8, #1e3a8a);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
 }
 
-.up { grid-area: up; }
-.left { grid-area: left; }
-.right { grid-area: right; }
-.down { grid-area: down; }
-
 .restart-btn {
-  padding: 16px 32px;
-  font-size: 18px;
-  background: #10b981;
+  padding: 20px 40px;
+  font-size: 20px;
+  background: linear-gradient(145deg, #10b981, #059669);
   color: white;
   border: none;
-  border-radius: 16px;
+  border-radius: 20px;
   cursor: pointer;
-  min-height: 56px;
+  min-height: 64px;
+  font-weight: 700;
+  box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
+  transition: all 0.2s;
 }
 
 .restart-btn:active {
-  background: #059669;
-  transform: scale(0.98);
+  background: linear-gradient(145deg, #059669, #047857);
+  transform: scale(0.96);
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6);
 }
 
+/* Fix landscape overflow */
+@media (max-height: 500px) {
+  .page-content {
+    padding: 8px;
+    gap: 12px;
+  }
+  
+  .quiz-controls {
+    padding: 16px;
+  }
+}
