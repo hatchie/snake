@@ -60,7 +60,7 @@ startQuizBtn.addEventListener("click", () => {
 });
 
 
-document.addEventListener("keydown", handleKeydown);
+document.addEventListener("keydown", );
 
 function resetGame() {
   resetGameForNewQuestion();
@@ -92,22 +92,26 @@ function prepareCurrentQuestion() {
 
 
 function handleKeydown(e) {
-  if (e.key === "ArrowUp" || e.key === "w") {
+  // Prevent scrolling on mobile
+  e.preventDefault();
+  
+  if (e.key === "ArrowUp" || e.key === "w" || e.key === "W") {
     if (vy === 1) return;
     vx = 0; vy = -1;
-  } else if (e.key === "ArrowDown" || e.key === "s") {
+  } else if (e.key === "ArrowDown" || e.key === "s" || e.key === "S") {
     if (vy === -1) return;
     vx = 0; vy = 1;
-  } else if (e.key === "ArrowLeft" || e.key === "a") {
+  } else if (e.key === "ArrowLeft" || e.key === "a" || e.key === "A") {
     if (vx === 1) return;
     vx = -1; vy = 0;
-  } else if (e.key === "ArrowRight" || e.key === "d") {
+  } else if (e.key === "ArrowRight" || e.key === "d" || e.key === "D") {
     if (vx === -1) return;
     vx = 1; vy = 0;
-  } else if (e.key === "r") {
+  } else if (e.key.toLowerCase() === "r") {
     resetGame();
   }
 }
+
 
 function resetGameForNewQuestion() {
   snake = [{ x: 10, y: 10 }];
@@ -351,6 +355,7 @@ loadQuizData().then(() => {
 
 
 gameLoop();
+
 
 
 
