@@ -73,7 +73,7 @@
 
   <p id="questionText">Choose a category and lesson, then press Start.</p>
 
-<!-- 👇 MOBILE TOUCH CONTROLS -->
+  <!-- 👇 MOBILE TOUCH CONTROLS -->
     <div class="mobile-controls">
       <div class="dpad">
         <button class="control-btn up" ontouchstart="moveSnake('up')" ontouchend="preventDefault(event)">↑</button>
@@ -83,6 +83,8 @@
           <button class="control-btn down" ontouchstart="moveSnake('down')" ontouchend="preventDefault(event)">↓</button>
         </div>
       </div>
+      <button class="restart-btn" onclick="resetGame()" ontouchstart="resetGame()">🔄 Restart</button>
+    </div>
     
   <div class="snake-wrapper">
     <canvas id="gameCanvas" width="400" height="400"></canvas>
@@ -101,5 +103,6 @@
   <script src="snake.js"></script>
 </body>
 </html>
+
 
 
