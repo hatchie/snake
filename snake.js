@@ -169,6 +169,7 @@ function gameLoop() {
     GameOver();
   } else {
     update();
+    draw();
   }
   setTimeout(gameLoop, 1000 / speed);
 }
@@ -469,6 +470,7 @@ loadQuizData().then(() => {
   console.error("❌ Failed to load quiz-data.json:", error);
   questionTextEl.textContent = "Error loading questions. Check quiz-data.json";
 });
+
 
 
 
