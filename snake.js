@@ -58,6 +58,10 @@ startQuizBtn.addEventListener("click", () => {
 
 document.addEventListener("keydown", handleKeydown);
 
+function resetGame() {
+  resetGameForNewQuestion();
+}
+
 async function loadQuizData() {
   const response = await fetch("quiz-data.json");
   quizData = await response.json();
@@ -163,7 +167,12 @@ function update() {
     if (cube.isCorrect) {
       // CORRECT: add to snake and advance
       eatenLetters.push(cube.letter.toUpperCase());
-      currentLetterIndex++;
+      // Skip spaces properly
+      while (currentLetterIndex < currentAnswerLetters.length && 
+             currentAnswerLetters[currentLetterIndex] === " ") {
+        currentLetterIndex++;
+      }
+
       score++;
       scoreSpan.textContent = score;
   
@@ -270,16 +279,21 @@ function drawGameOver() {
 function generateLetterCubesForAnswer() {
   letterCubes = [];
 
-  // Get the NEXT correct letter the player needs
-  const correctLetter = currentAnswerLetters[currentLetterIndex];
-  if (!correctLetter || correctLetter === " ") {
-    // Skip spaces automatically
-    currentLetterIndex++;
-    generateLetterCubesForAnswer(); // recursive call
-    return;
+  // Skip spaces to find next REAL letter
+  let nextLetterIndex = currentLetterIndex;
+  while (nextLetterIndex < currentAnswerLetters.length && 
+         currentAnswerLetters[nextLetterIndex] === " ") {
+    nextLetterIndex++;
   }
 
-  // Define distractors based on correct letter (your rules)
+  // If no more letters, quiz is done (don't recurse)
+  if (nextLetterIndex >= currentAnswerLetters.length) {
+    return; // Exit silently
+  }
+
+  const correctLetter = currentAnswerLetters[nextLetterIndex];
+
+  // Define distractors based on correct letter
   let distractors = [];
   if (correctLetter.toLowerCase() === "s") {
     distractors = ["c", "z", "x", "p"];
@@ -294,14 +308,12 @@ function generateLetterCubesForAnswer() {
   } else if (correctLetter.toLowerCase() === "u") {
     distractors = ["a", "e", "i", "o"];
   } else {
-    // Default: nearby letters on keyboard
     distractors = ["q", "w", "d", "f"];
   }
 
   // Create 5 cubes: 1 correct + 4 distractors
   const allLetters = [correctLetter.toLowerCase(), ...distractors];
   
-  // Shuffle positions but keep letters in fixed order (1 correct first)
   for (let i = 0; i < 5; i++) {
     let pos;
     let conflict;
@@ -317,13 +329,13 @@ function generateLetterCubesForAnswer() {
     } while (conflict);
 
     const letter = allLetters[i];
-    const isCorrect = i === 0; // First is always correct
+    const isCorrect = i === 0;
 
     letterCubes.push({
       x: pos.x,
       y: pos.y,
       letter: letter,
-      indexInAnswer: currentLetterIndex, // All point to current needed index
+      indexInAnswer: nextLetterIndex,
       isCorrect: isCorrect
     });
   }
@@ -337,5 +349,6 @@ loadQuizData().then(() => {
 
 
 gameLoop();
+
 
 
