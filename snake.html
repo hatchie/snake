@@ -67,10 +67,9 @@
     <label class="control-label">
       Speed:
       <select id="speedSelect">
-        <option value="6">🐌 Slow</option>
-        <option value="8" selected>🐢 Normal</option>
+        <option value="6" selected>🐌 Slow</option>
+        <option value="8">🐢 Normal</option>
         <option value="12">🐇 Fast</option>
-        <option value="16">⚡ Crazy</option>
       </select>
     </label>
     <button id="startQuizBtn" class="start-btn">🚀 Start Quiz</button>
@@ -83,18 +82,18 @@
     <canvas id="gameCanvas" width="400" height="400"></canvas>
   </div>
 
-  <!-- Touch Controls (bottom) -->
-  <div class="mobile-controls">
-    <div class="dpad">
-      <button class="control-btn up" ontouchstart="moveSnake('up')">↑</button>
-      <div class="dpad-center">
-        <button class="control-btn left" ontouchstart="moveSnake('left')">←</button>
-        <button class="control-btn right" ontouchstart="moveSnake('right')">→</button>
-        <button class="control-btn down" ontouchstart="moveSnake('down')">↓</button>
-      </div>
+ <div class="mobile-controls">
+  <div class="dpad">
+    <button class="control-btn up" onclick="moveSnake('up')">↑</button>
+    <div class="dpad-center">
+      <button class="control-btn left" onclick="moveSnake('left')">←</button>
+      <button class="control-btn right" onclick="moveSnake('right')">→</button>
+      <button class="control-btn down" onclick="moveSnake('down')">↓</button>
     </div>
-    <button class="restart-btn" onclick="resetGame()">🔄 Restart</button>
   </div>
+  <button class="restart-btn" onclick="resetGame()">🔄 Restart</button>
+</div>
+
 </main>
 
 
@@ -106,6 +105,7 @@
   <script src="snake.js"></script>
 </body>
 </html>
+
 
 
 
