@@ -20,7 +20,7 @@ let currentLetterIndex = 0;    // index of next letter to eat
 
 let eatenLetters = []; // tracks letters snake has eaten
 
-let lives = 3;  //  3 snake lives
+let lives = 5;  //  5 snake lives
 let snake = [{ x: 10, y: 10 }];
 let vx = 1;
 let vy = 0;
@@ -483,6 +483,7 @@ loadQuizData().then(() => {
   console.error("❌ Failed to load quiz-data.json:", error);
   questionTextEl.textContent = "Error loading questions. Check quiz-data.json";
 });
+
 
 
 
