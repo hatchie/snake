@@ -172,7 +172,8 @@ function update() {
              currentAnswerLetters[currentLetterIndex] === " ") {
         currentLetterIndex++;
       }
-
+      currentLetterIndex++;
+      
       score++;
       scoreSpan.textContent = score;
   
@@ -207,9 +208,6 @@ function update() {
     // Normal move, no cube eaten
     snake.pop();
   }
-
-  ctx.textAlign = "left";      // Reset text alignment
-  ctx.textBaseline = "alphabetic"; // Reset text baseline
 }
 
 
@@ -279,16 +277,16 @@ function drawGameOver() {
 function generateLetterCubesForAnswer() {
   letterCubes = [];
 
-  // Skip spaces to find next REAL letter
+  // Skip spaces to find next REAL letter needed
   let nextLetterIndex = currentLetterIndex;
   while (nextLetterIndex < currentAnswerLetters.length && 
          currentAnswerLetters[nextLetterIndex] === " ") {
     nextLetterIndex++;
   }
 
-  // If no more letters, quiz is done (don't recurse)
+  // If no more letters needed, exit
   if (nextLetterIndex >= currentAnswerLetters.length) {
-    return; // Exit silently
+    return;
   }
 
   const correctLetter = currentAnswerLetters[nextLetterIndex];
@@ -329,13 +327,13 @@ function generateLetterCubesForAnswer() {
     } while (conflict);
 
     const letter = allLetters[i];
-    const isCorrect = i === 0;
+    const isCorrect = i === 0;  // First letter is always correct
 
     letterCubes.push({
       x: pos.x,
       y: pos.y,
       letter: letter,
-      indexInAnswer: nextLetterIndex,
+      indexInAnswer: nextLetterIndex,  // CRITICAL: Use nextLetterIndex!
       isCorrect: isCorrect
     });
   }
@@ -349,6 +347,7 @@ loadQuizData().then(() => {
 
 
 gameLoop();
+
 
 
 
