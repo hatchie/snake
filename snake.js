@@ -164,12 +164,12 @@ document.addEventListener('touchmove', function(e) { e.preventDefault(); }, { pa
 
 function gameLoop() {
   if (quizFinished) {
-    drawQuizComplete();
+    QuizComplete();
   } else if (gameOver) {
-    drawGameOver();
+    GameOver();
   } else {
     update();
-    draw();
+    ();
   }
   setTimeout(gameLoop, 1000 / speed);
 }
@@ -267,13 +267,30 @@ function update() {
 
 
 function draw() {
+  // Clear canvas
   ctx.fillStyle = "#020617";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-   // snake: each segment shows its letter
+  // Draw lives indicator (top-left corner)
+  ctx.fillStyle = "rgba(11, 17, 32, 0.9)";
+  ctx.fillRect(12, 12, 140, 36);
+  
+  ctx.fillStyle = "#10b981";
+  ctx.font = "bold 22px system-ui";
+  ctx.textAlign = "left";
+  ctx.textBaseline = "middle";
+  ctx.fillText(`♥ ${lives}`, 24, 30);
+  
+  ctx.strokeStyle = "#059669";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(10, 10, 144, 40);
+
+  // Snake: each segment shows its letter
   for (let i = 0; i < snake.length; i++) {
     const segment = snake[i];
-    ctx.fillStyle = i === 0 ? "#22c55e" : "#38bdf8"; // head green, body blue
+    
+    // Head green, body blue gradient
+    ctx.fillStyle = i === 0 ? "#22c55e" : `hsl(200, 80%, ${55 - i * 2}%)`;
     
     ctx.fillRect(
       segment.x * tileSize,
@@ -281,11 +298,24 @@ function draw() {
       tileSize - 2,
       tileSize - 2
     );
-  
+    
+    // Head glow effect
+    if (i === 0) {
+      ctx.shadowColor = "#22c55e";
+      ctx.shadowBlur = 12;
+      ctx.fillRect(
+        segment.x * tileSize + 1,
+        segment.y * tileSize + 1,
+        tileSize - 4,
+        tileSize - 4
+      );
+      ctx.shadowBlur = 0;
+    }
+
     // Show letter on snake segments (last eaten letters)
     if (i > 0 && eatenLetters[i-1]) {
       ctx.fillStyle = "#0b1120";
-      ctx.font = "12px system-ui";
+      ctx.font = `${Math.max(10, 16 - snake.length * 0.3)}px system-ui`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText(
@@ -296,31 +326,66 @@ function draw() {
     }
   }
 
-
-  // cubes: ALL BLUE now
+  // Letter cubes: ALL BLUE
   for (const cube of letterCubes) {
-    ctx.fillStyle = "#38bdf8";  // ALL BLUE
+    ctx.fillStyle = "#38bdf8";
     ctx.fillRect(
       cube.x * tileSize,
       cube.y * tileSize,
       tileSize - 2,
       tileSize - 2
     );
-  
+    
+    // Cube glow
+    ctx.shadowColor = "#38bdf8";
+    ctx.shadowBlur = 8;
+    ctx.fillRect(
+      cube.x * tileSize + 1,
+      cube.y * tileSize + 1,
+      tileSize - 4,
+      tileSize - 4
+    );
+    ctx.shadowBlur = 0;
+    
+    // Letter text
     ctx.fillStyle = "#0b1120";
-    ctx.font = "14px system-ui";
+    ctx.font = "bold 14px system-ui";
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(
-      cube.letter,
+      cube.letter.toUpperCase(),
       cube.x * tileSize + tileSize / 2,
       cube.y * tileSize + tileSize / 2
     );
   }
-  
+
+  // Progress indicator (current word progress)
+  if (currentAnswerLetters.length > 0) {
+    const progress = Math.min((currentLetterIndex / currentAnswerLetters.length) * 100, 100);
+    ctx.fillStyle = "rgba(99, 102, 241, 0.2)";
+    ctx.fillRect(canvas.width - 120, 12, 108, 20);
+    
+    ctx.fillStyle = "#6366f1";
+    ctx.fillRect(canvas.width - 120, 12, (108 * progress) / 100, 20);
+    
+    ctx.fillStyle = "#ffffff";
+    ctx.font = "bold 14px system-ui";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(
+      `${Math.floor(progress)}%`,
+      canvas.width - 66,
+      22
+    );
+  }
+
+  // Reset canvas state
   ctx.textAlign = "left";
   ctx.textBaseline = "alphabetic";
+  ctx.shadowBlur = 0;
+  ctx.lineWidth = 1;
 }
+
 
 function drawGameOver() {
   ctx.fillStyle = "rgba(0,0,0,0.5)";
@@ -405,6 +470,7 @@ loadQuizData().then(() => {
   console.error("❌ Failed to load quiz-data.json:", error);
   questionTextEl.textContent = "Error loading questions. Check quiz-data.json";
 });
+
 
 
 
