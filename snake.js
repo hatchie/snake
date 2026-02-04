@@ -121,7 +121,7 @@ function resetGameForNewQuestion() {
   gameOver = false;
   quizFinished = false;
   eatenLetters = [];
-  lives = 3;  // RESET LIVES
+  lives = 5;  // RESET LIVES
   document.getElementById("livesValue").textContent = lives;
   prepareCurrentQuestion();
 }
@@ -483,6 +483,7 @@ loadQuizData().then(() => {
   console.error("❌ Failed to load quiz-data.json:", error);
   questionTextEl.textContent = "Error loading questions. Check quiz-data.json";
 });
+
 
 
 
