@@ -162,11 +162,24 @@ document.addEventListener('touchend', function(e) {}, { passive: false });
 document.addEventListener('touchmove', function(e) { e.preventDefault(); }, { passive: false });
 
 
+function drawQuizComplete() {
+  ctx.fillStyle = "rgba(0,0,0,0.6)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "#bbf7d0";
+  ctx.font = "bold 28px system-ui";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("🎉 Quiz Complete!", canvas.width / 2, canvas.height / 2 - 20);
+  ctx.font = "20px system-ui";
+  ctx.fillText(`Final Score: ${score}`, canvas.width / 2, canvas.height / 2 + 10);
+}
+
+
 function gameLoop() {
   if (quizFinished) {
-    QuizComplete();
+    drawQuizComplete();
   } else if (gameOver) {
-    GameOver();
+    drawGameOver();
   } else {
     update();
     draw();
@@ -388,13 +401,19 @@ function draw() {
 
 
 function drawGameOver() {
-  ctx.fillStyle = "rgba(0,0,0,0.5)";
+  ctx.fillStyle = "rgba(0,0,0,0.7)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "#f9fafb";
-  ctx.font = "24px system-ui";
+  ctx.font = "bold 28px system-ui";
   ctx.textAlign = "center";
-  ctx.fillText("Game Over - Press R", canvas.width / 2, canvas.height / 2);
+  ctx.textBaseline = "middle";
+  ctx.fillText("💀 Game Over", canvas.width / 2, canvas.height / 2 - 30);
+  ctx.font = "20px system-ui";
+  ctx.fillText(`Score: ${score} | Lives Lost`, canvas.width / 2, canvas.height / 2 + 10);
+  ctx.font = "16px system-ui";
+  ctx.fillText("Press R to restart", canvas.width / 2, canvas.height / 2 + 40);
 }
+
 
 function generateLetterCubesForAnswer() {
   letterCubes = [];
@@ -470,6 +489,7 @@ loadQuizData().then(() => {
   console.error("❌ Failed to load quiz-data.json:", error);
   questionTextEl.textContent = "Error loading questions. Check quiz-data.json";
 });
+
 
 
 
