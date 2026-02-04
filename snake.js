@@ -429,54 +429,56 @@ function generateLetterCubesForAnswer() {
 
   const correctLetter = currentAnswerLetters[nextLetterIndex];
 
-  // Define distractors based on correct letter
+ // Smart distractors (your rules)
   let distractors = [];
-  if (correctLetter.toLowerCase() === "s") {
-    distractors = ["c", "z", "x", "p"];
-  } else if (correctLetter.toLowerCase() === "a") {
-    distractors = ["i", "o", "e", "u"];
-  } else if (correctLetter.toLowerCase() === "e") {
-    distractors = ["i", "a", "o", "u"];
-  } else if (correctLetter.toLowerCase() === "i") {
-    distractors = ["e", "a", "o", "u"];
-  } else if (correctLetter.toLowerCase() === "o") {
-    distractors = ["a", "e", "i", "u"];
-  } else if (correctLetter.toLowerCase() === "u") {
-    distractors = ["a", "e", "i", "o"];
-  } else {
-    distractors = ["q", "w", "d", "f"];
+  switch (correctLetter.toLowerCase()) {
+    case "s": distractors = ["c", "z", "x", "p"]; break;
+    case "a": distractors = ["i", "o", "e", "u"]; break;
+    case "e": distractors = ["i", "a", "o", "u"]; break;
+    case "i": distractors = ["e", "a", "o", "u"]; break;
+    case "o": distractors = ["a", "e", "i", "u"]; break;
+    case "u": distractors = ["a", "e", "i", "o"]; break;
+    default: distractors = ["q", "w", "d", "f"]; break;
   }
 
-  // Create 5 cubes: 1 correct + 4 distractors
-  const allLetters = [correctLetter.toLowerCase(), ...distractors];
+   // 👇 GUARANTEE EXACTLY 5 CUBES
+  const allLetters = [correctLetter.toLowerCase(), ...distractors.slice(0, 4)];
   
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 5; i++) {  // 👈 ALWAYS 5 iterations
     let pos;
-    let conflict;
+    let attempts = 0;
+    const maxAttempts = 100;  // Prevent infinite loop
+    
     do {
+      // Safe spawn area (25% from top, 1 tile from edges)
       pos = {
-        x: Math.floor(Math.random() * (tileCount - 4)) + 2,  // 2 tiles from left/right
-        y: Math.floor(Math.random() * (tileCount * 0.7)) + 5  // 25% top = ~6 tiles down + 60% play area
+        x: Math.floor(Math.random() * (tileCount - 4)) + 2,
+        y: Math.floor(Math.random() * (tileCount * 0.6)) + 6
       };
-      conflict = snake.some(seg => seg.x === pos.x && seg.y === pos.y);
+      
+      attempts++;
+      let conflict = snake.some(seg => seg.x === pos.x && seg.y === pos.y);
       if (!conflict) {
         conflict = letterCubes.some(c => c.x === pos.x && c.y === pos.y);
       }
-    } while (conflict);
+    } while (conflict && attempts < maxAttempts);
 
-    const letter = allLetters[i];
-    const isCorrect = i === 0;  // First letter is always correct
+    // 👈 EMERGENCY: if no space found, use first safe position
+    if (attempts >= maxAttempts) {
+      pos = { x: 5, y: 8 };  // Hard-coded safe spot
+    }
 
     letterCubes.push({
       x: pos.x,
       y: pos.y,
-      letter: letter,
-      indexInAnswer: nextLetterIndex,  // CRITICAL: Use nextLetterIndex!
-      isCorrect: isCorrect
+      letter: allLetters[i],
+      indexInAnswer: nextLetterIndex,
+      isCorrect: i === 0
     });
   }
+  
+  console.log(`Generated ${letterCubes.length} cubes`);  // Debug
 }
-
 
 // Wait for JSON before starting game
 loadQuizData().then(() => {
@@ -486,6 +488,7 @@ loadQuizData().then(() => {
   console.error("❌ Failed to load quiz-data.json:", error);
   questionTextEl.textContent = "Error loading questions. Check quiz-data.json";
 });
+
 
 
 
