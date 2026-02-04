@@ -304,3 +304,19 @@ a {
 .right { grid-area: right; }
 .down { grid-area: down; }
 
+.restart-btn {
+  padding: 16px 32px;
+  font-size: 18px;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  cursor: pointer;
+  min-height: 56px;
+}
+
+.restart-btn:active {
+  background: #059669;
+  transform: scale(0.98);
+}
+
